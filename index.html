@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8">
+    <title>妙麗歲數計算機</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          "Segoe UI", system-ui, sans-serif;
+        background: linear-gradient(145deg, #f8f1ea, #f1e3d6);
+        color: #4b3a33;
+      }
+
+      .app {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 16px 24px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .app::before {
+        content: "";
+        position: absolute;
+        inset: auto -40px 0;
+        height: 260px;
+        background: #c7a792;
+        border-radius: 50% 50% 0 0 / 30% 30% 0 0;
+        z-index: -1;
+      }
+
+      .card {
+        width: 100%;
+        max-width: 360px;
+        background: #fff7ef;
+        border-radius: 28px;
+        padding: 24px 22px 22px;
+        box-shadow: 0 14px 40px rgba(104, 78, 60, 0.25);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .card-header {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .pill {
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #f0e2d6;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        color: #6b4c3b;
+      }
+
+      .card-title {
+        margin: 4px 0 8px;
+        font-size: 20px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .dog-emoji {
+        font-size: 26px;
+      }
+
+      .divider {
+        width: 100%;
+        height: 1px;
+        background: #e8d8c8;
+        margin: 6px 0 16px;
+      }
+
+      .dog-illustration {
+        margin-bottom: 18px;
+      }
+
+      .dog-icon {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: #f4e4d5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(110, 81, 61, 0.35);
+      }
+
+      .dog-photo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .form-group {
+        width: 100%;
+        margin-bottom: 12px;
+      }
+
+      .label {
+        font-size: 13px;
+        margin-bottom: 6px;
+        color: #6b4c3b;
+      }
+
+      .date-input-wrapper {
+        position: relative;
+      }
+
+      input[type="date"] {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 999px;
+        border: 1px solid #dbc9b8;
+        font-size: 13px;
+        outline: none;
+        background: #f6ede3;
+        color: #4b3a33;
+      }
+
+      input[type="date"]:focus {
+        border-color: #6b4c3b;
+        background: #fffaf5;
+      }
+
+      .btn {
+        width: 100%;
+        margin-top: 8px;
+        border-radius: 999px;
+        border: none;
+        padding: 11px 14px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        background: #6b4c3b;
+        color: #fff7ee;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        transition: transform 0.08s ease, box-shadow 0.08s ease,
+          background 0.2s ease;
+        box-shadow: 0 10px 24px rgba(88, 63, 47, 0.55);
+      }
+
+      .btn:hover {
+        background: #5e4030;
+      }
+
+      .btn:active {
+        transform: translateY(1px);
+        box-shadow: 0 4px 16px rgba(88, 63, 47, 0.6);
+      }
+
+      .btn-icon {
+        font-size: 14px;
+      }
+
+      .result-section {
+        width: 100%;
+        margin-top: 16px;
+        text-align: center;
+      }
+
+      .age-number {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+      }
+
+      .age-unit {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+        color: #9a8170;
+        margin-bottom: 8px;
+      }
+
+      .result-text {
+        font-size: 13px;
+        line-height: 1.8;
+        color: #5b4638;
+      }
+
+      .hint-text {
+        margin-top: 6px;
+        font-size: 11px;
+        color: #aa9383;
+      }
+
+      @media (max-width: 480px) {
+        .app {
+          padding: 24px 12px 18px;
+        }
+
+        .card {
+          border-radius: 24px;
+          padding: 20px 18px 20px;
+        }
+
+        .age-number {
+          font-size: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div class="card">
+        <div class="card-header">
+          <div class="pill">
+            <span class="dog-emoji">🐶</span>
+            <span>Miaoli Age</span>
+          </div>
+        </div>
+
+        <h1 class="card-title">妙麗歲數計算機</h1>
+        <div class="divider"></div>
+
+        <div class="dog-illustration" aria-hidden="true">
+          <div class="dog-icon">
+            <img
+              src="https://hackmd.io/_uploads/Hyc4usZlWe.png"
+              alt="妙麗的照片"
+              class="dog-photo"
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="label">狗狗的出生日期</div>
+          <div class="date-input-wrapper">
+            <input type="date" id="dogBirthDate">
+          </div>
+        </div>
+
+        <button class="btn" id="calculateBtn">
+          <span class="btn-icon">⏱</span>
+          <span>開始計算</span>
+        </button>
+
+        <div class="result-section" id="resultSection" style="display:none;">
+          <div class="age-number" id="dogAgeDisplay">0.0</div>
+          <div class="age-unit">DOG YEARS</div>
+          <div class="result-text" id="resultText"></div>
+          <div class="hint-text" id="hintText"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const STORAGE_KEY = "miaoliAgeCalc";
+
+      function corgiDogToHumanAge(dogAgeYears) {
+        if (dogAgeYears <= 0) return 0;
+
+        const dogYears = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+        const humanYears = [0, 15, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80];
+
+        if (dogAgeYears >= dogYears[dogYears.length - 1]) {
+          const lastIndex = dogYears.length - 1;
+          const slope =
+            (humanYears[lastIndex] - humanYears[lastIndex - 1]) /
+            (dogYears[lastIndex] - dogYears[lastIndex - 1]);
+          return humanYears[lastIndex] + (dogAgeYears - dogYears[lastIndex]) * slope;
+        }
+
+        for (let i = 1; i < dogYears.length; i++) {
+          if (dogAgeYears <= dogYears[i]) {
+            const x0 = dogYears[i - 1];
+            const x1 = dogYears[i];
+            const y0 = humanYears[i - 1];
+            const y1 = humanYears[i];
+
+            const t = (dogAgeYears - x0) / (x1 - x0);
+            return y0 + t * (y1 - y0);
+          }
+        }
+
+        return dogAgeYears * 7;
+      }
+
+      function formatDateForHint(date) {
+        if (!(date instanceof Date) || isNaN(date.getTime())) return "";
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+        return `${y}/${m}/${d}`;
+      }
+
+      function showResult({ birthDate, dogAge, humanAge }) {
+        const resultSection = document.getElementById("resultSection");
+        const dogAgeDisplay = document.getElementById("dogAgeDisplay");
+        const resultText = document.getElementById("resultText");
+        const hintText = document.getElementById("hintText");
+
+        const dogAgeStr = dogAge.toFixed(1);
+        const humanAgeStr = humanAge.toFixed(1);
+
+        dogAgeDisplay.textContent = dogAgeStr;
+        resultText.textContent =
+          "妙麗現在大約 " +
+          dogAgeStr +
+          " 歲狗年齡，換算成人類年齡大約是 " +
+          humanAgeStr +
+          " 歲。";
+
+        hintText.textContent = "最近一次計算使用的生日為：" + formatDateForHint(birthDate);
+
+        resultSection.style.display = "block";
+      }
+
+      function calculateDogAndHumanAge() {
+        const input = document.getElementById("dogBirthDate");
+        const value = input.value;
+
+        const resultSection = document.getElementById("resultSection");
+        const resultText = document.getElementById("resultText");
+        const hintText = document.getElementById("hintText");
+
+        if (!value) {
+          resultSection.style.display = "none";
+          return;
+        }
+
+        const birthDate = new Date(value);
+        const today = new Date();
+
+        if (isNaN(birthDate.getTime()) || birthDate > today) {
+          resultSection.style.display = "block";
+          document.getElementById("dogAgeDisplay").textContent = "—";
+          resultText.textContent = "請確認輸入的日期是否正確噢！";
+          hintText.textContent = "";
+          return;
+        }
+
+        const diffMs = today.getTime() - birthDate.getTime();
+        const yearMs = 365.25 * 24 * 60 * 60 * 1000;
+        const dogAge = diffMs / yearMs;
+        const humanAge = corgiDogToHumanAge(dogAge);
+
+        showResult({ birthDate, dogAge, humanAge });
+
+        try {
+          const dataToStore = {
+            birthDateValue: value,
+            dogAge: +dogAge.toFixed(1),
+            humanAge: +humanAge.toFixed(1)
+          };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToStore));
+        } catch (e) {
+          console.warn("Failed to save to localStorage", e);
+        }
+      }
+
+      function restoreFromLocalStorage() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+
+          const parsed = JSON.parse(raw);
+          if (!parsed || !parsed.birthDateValue) return;
+
+          const input = document.getElementById("dogBirthDate");
+          input.value = parsed.birthDateValue;
+
+          const birthDate = new Date(parsed.birthDateValue);
+          const dogAge =
+            typeof parsed.dogAge === "number"
+              ? parsed.dogAge
+              : (new Date() - birthDate) / (365.25 * 24 * 60 * 60 * 1000);
+          const humanAge =
+            typeof parsed.humanAge === "number"
+              ? parsed.humanAge
+              : corgiDogToHumanAge(dogAge);
+
+          showResult({ birthDate, dogAge, humanAge });
+        } catch (e) {
+          console.warn("Failed to restore from localStorage", e);
+        }
+      }
+
+      document
+        .getElementById("calculateBtn")
+        .addEventListener("click", calculateDogAndHumanAge);
+
+      restoreFromLocalStorage();
+    </script>
+  </body>
+</html>
